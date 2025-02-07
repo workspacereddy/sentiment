@@ -8,8 +8,8 @@ app = FastAPI()
 # Initialize the sentiment analysis pipeline
 sentiment_analysis = pipeline(
     "sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english",
-    device=0  # Use GPU if available
+    model="bert-base-uncased",
+    device=-1  # Use GPU if available
 )
 
 # Define the input data model (request body schema)
