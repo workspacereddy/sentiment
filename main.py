@@ -15,12 +15,18 @@ app.add_middleware(
 )
 
 
+
 class TextInput(BaseModel):
     text: str
+
 
 @app.get("/")
 async def read_root():
     return {"message": "API is working!"}
+
+@app.options("/analyze_sentiment/")
+async def handle_options():
+    return {"message": "OPTIONS request handled"}
 
 @app.post("/analyze_sentiment/")
 async def analyze_sentiment(input_data: TextInput):
