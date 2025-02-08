@@ -1,11 +1,12 @@
-import requests
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+import requests
 
 app = FastAPI()
 
-# Allow CORS for all domains (you can restrict this to specific domains as needed)
+# Allow CORS for all domains
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # You can replace "*" with specific domains like "https://your-frontend.vercel.app"
@@ -14,35 +15,34 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-
-
 class TextInput(BaseModel):
     text: str
-
 
 @app.get("/")
 async def read_root():
     return {"message": "API is working!"}
 
+# Handling OPTIONS request explicitly for CORS pre-flight
 @app.options("/analyze_sentiment/")
 async def handle_options():
-    return {"message": "OPTIONS request handled"}
+    # Explicitly returning an empty response with status 200
+    return JSONResponse(content={}, status_code=200)
 
 @app.post("/analyze_sentiment/")
 async def analyze_sentiment(input_data: TextInput):
     input_text = input_data.text
-    
+
     # Send the request to Hugging Face Inference API
     response = requests.post(
         "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english",
         headers={"Authorization": "Bearer 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"},
         json={"inputs": input_text}
     )
-    
+
     # Check if the response status is OK (200)
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail="Error from Hugging Face API")
-    
+
     # Log the raw response to inspect its structure
     print("Raw response text:", response.text)
 
