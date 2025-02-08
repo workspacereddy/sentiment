@@ -1,35 +1,25 @@
+import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
-from transformers import pipeline
 
-# Initialize the FastAPI app
 app = FastAPI()
 
-# Initialize the sentiment analysis pipeline
-sentiment_analysis = pipeline(
-    "sentiment-analysis",
-    model="bert-base-uncased",
-    device=-1  # Use GPU if available
-)
-
-# Define the input data model (request body schema)
 class TextInput(BaseModel):
     text: str
 
-# Define the sentiment analysis endpoint
 @app.post("/analyze_sentiment/")
 async def analyze_sentiment(input_data: TextInput):
     input_text = input_data.text
     
-    # Perform sentiment analysis
-    result = sentiment_analysis(input_text)
+    # Send the request to Hugging Face Inference API
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english",
+        headers={"Authorization": "Bearer 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"},
+        json={"inputs": input_text}
+    )
     
-    # Prepare the result to be returned
-    sentiment_result = []
-    for item in result:
-        sentiment_result.append({
-            "sentiment": item['label'],
-            "score": item['score'] * 100
-        })
+    # Parse the response
+    result = response.json()
+    sentiment_result = [{"sentiment": item['label'], "score": item['score'] * 100} for item in result]
     
     return {"result": sentiment_result}
