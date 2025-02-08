@@ -26,6 +26,9 @@ async def analyze_sentiment(input_data: TextInput):
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail="Error from Hugging Face API")
     
+    # Log the raw response to inspect its structure
+    print("Raw response:", response.text)
+
     # Parse the response
     try:
         result = response.json()
