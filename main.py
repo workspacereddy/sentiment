@@ -7,6 +7,10 @@ app = FastAPI()
 class TextInput(BaseModel):
     text: str
 
+@app.get("/")
+async def read_root():
+    return {"message": "API is working!"}
+
 @app.post("/analyze_sentiment/")
 async def analyze_sentiment(input_data: TextInput):
     input_text = input_data.text
