@@ -8,7 +8,7 @@ app = FastAPI()
 # Allow CORS for all domains (you can restrict this to specific domains as needed)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://sentiment-frontend-two.vercel.app/"],  # You can replace "*" with specific domains like "https://your-frontend.vercel.app"
+    allow_origins=["*"],  # You can replace "*" with specific domains like "https://your-frontend.vercel.app"
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers
