@@ -27,11 +27,12 @@ async def analyze_sentiment(input_data: TextInput):
         raise HTTPException(status_code=response.status_code, detail="Error from Hugging Face API")
     
     # Log the raw response to inspect its structure
-    print("Raw response:", response.text)
+    print("Raw response text:", response.text)
 
     # Parse the response
     try:
         result = response.json()
+        print("Parsed response:", result)
     except ValueError:
         raise HTTPException(status_code=500, detail="Failed to parse response from Hugging Face API")
 
@@ -39,9 +40,9 @@ async def analyze_sentiment(input_data: TextInput):
     if not result:
         raise HTTPException(status_code=500, detail="No result returned from Hugging Face API")
 
-    # Process sentiment analysis results
+    # Unwrap the list inside the response
     sentiment_result = []
-    for item in result:
+    for item in result[0]:  # Access the first item of the list (the actual sentiment results)
         # Ensure each item has the 'label' and 'score' keys
         if 'label' in item and 'score' in item:
             sentiment_result.append({
