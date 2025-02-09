@@ -9,7 +9,7 @@ app = FastAPI()
 # Allow CORS for all domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://workspacereddy1.vercel.app/"],  # You can replace "*" with specific domains like "https://your-frontend.vercel.app"
+    allow_origins=["*"],  # You can replace "*" with specific domains like "https://your-frontend.vercel.app"
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -28,7 +28,7 @@ async def handle_options():
     # Explicitly returning an empty response with status 200
     return JSONResponse(content={}, status_code=200)
 
-@app.post("/analyze_sentiment/")
+@app.post("/sentiment/")
 async def analyze_sentiment(input_data: TextInput):
     input_text = input_data.text
 
