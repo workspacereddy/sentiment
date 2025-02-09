@@ -19,6 +19,7 @@ class TextInput(BaseModel):
     text: str
 
 @app.get("/")
+@app.head("/")
 async def read_root():
     return {"message": "API is working!"}
 
